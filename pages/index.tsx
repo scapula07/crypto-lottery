@@ -18,7 +18,7 @@ import toast from "react-hot-toast";
 import Marquee from "react-fast-marquee";
 import AdminControls from "../components/AdminControls";
 import abi from "./Lottery.json"
-import {getSigner,getSender} from "./util"
+import {getSigner,getSender} from "../util"
 
 const Home: NextPage = () => {
 

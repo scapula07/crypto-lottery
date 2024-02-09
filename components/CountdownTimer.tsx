@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from "react";
 import { useAddress, useContract, useContractData } from "@thirdweb-dev/react";
 import Countdown from "react-countdown";
-import {getSigner} from "../pages/util"
+import {getSigner} from "../util"
 import { ethers } from "ethers";
 import abi from "../pages/Lottery.json"
 

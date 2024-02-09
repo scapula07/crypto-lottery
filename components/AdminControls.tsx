@@ -15,7 +15,7 @@ import { ethers } from "ethers";
 import { currency } from "../constants";
 import toast from "react-hot-toast";
 import abi from "../pages/Lottery.json"
-import {getSigner} from "../pages/util"
+import {getSigner} from "../util"
 
 
 type AdminControlsProps = {};
