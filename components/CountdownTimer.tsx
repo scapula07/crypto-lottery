@@ -47,8 +47,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = () => {
         <div>
           <h2
             className="text-white text-center animate-bounce"
-            xt-xl
-            text-center
+       
           >
             Ticket Sales have now CLOSED for this draw
           </h2>
