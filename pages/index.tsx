@@ -1,3 +1,4 @@
+"use client";
 import {
   useAddress,
   useContract,
@@ -16,53 +17,81 @@ import { currency } from "../constants";
 import toast from "react-hot-toast";
 import Marquee from "react-fast-marquee";
 import AdminControls from "../components/AdminControls";
+import abi from "./Lottery.json"
+import {getSigner,getSender} from "./util"
 
 const Home: NextPage = () => {
+
+
   const address = useAddress();
   const [userTicket, setUserTicket] = useState(0);
-  const { contract, isLoading } = useContract(
-    process.env.NEXT_PUBLIC_LOTTERY_CONTRACT_ADDRESS
-  );
-  const { data: remainingTickets } = useContractData(
-    contract,
-    "RemainingTickets"
-  );
-  const { data: currentWinningReward } = useContractData(
-    contract,
-    "CurrentWinningReward"
-  );
-  const { data: ticketCommission } = useContractData(
-    contract,
-    "ticketCommission"
-  );
-  const { data: expiration } = useContractData(contract, "expiration");
-  const { data: ticketPrice } = useContractData(contract, "ticketPrice");
-  const { mutateAsync: BuyTickets } = useContractCall(contract, "BuyTickets");
-  const { data: winners } = useContractData(
-    contract,
-    "getWinningsForAddress",
-    address
-  );
-  const { mutateAsync: WithdrawWinnings } = useContractCall(
-    contract,
-    "WithdrawWinnings"
-  );
-  const { data: lastWinner } = useContractData(contract, "lastWinner");
-  const { data: lastWinnerAmount } = useContractData(
-    contract,
-    "lastWinnerAmount"
-  );
-  const { data: lotteryOperator } = useContractData(
-    contract,
-    "lotteryOperator"
-  );
-  const { data: tickets } = useContractData(contract, "getTickets");
+  const [remainingTickets,setRemaining]=useState<any>()
+  const [currentWinningReward,setReward]=useState(0)
+  const [ticketCommission,setCommission]=useState(0)
+  const [expiration,setExp]=useState<any>()
+  const [ticketPrice,setPrice]=useState(0)
+  const [lastWinner,setWinner]=useState(0)
+  const [lotteryOperator,setOperator]=useState("")
+  const [tickets,setTickets]=useState([])
+  const [lastWinnerAmount,setAmount]=useState(0)
+  const [WithdrawWinnings ,setEarnings]=useState(0)
+  const [winners ,setWinners]=useState(0)
+  // const [address,setAddress]=useState("")
+
+    useEffect(()=>{
+     const getAllParams=async()=>{
+
+        if (window.ethereum && address?.length != undefined) {
+       
+            const signer:any =await getSigner()
+            const sender:any =await getSender()
+
+            console.log(signer,"sihg")
+            const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
+            const remainingTickets = await Contract.RemainingTickets();
+            const reward = await Contract.CurrentWinningReward();
+            const commission = await Contract.ticketCommission();
+            const expiration = await Contract.expiration();
+            const price = await Contract.ticketPrice();
+            const tickets = await Contract.getTickets();
+            const win = await Contract.getWinningsForAddress(sender);
+            // const winings = await Contract.WithdrawWinnings();
+            const lastwinner = await Contract.lastWinner();
+            const operator= await Contract.lotteryOperator();
+            setRemaining(remainingTickets)
+            setReward(reward)
+            setCommission(commission)
+            setExp(expiration)
+            setPrice(price)
+            setWinner(lastwinner)
+            setTickets(tickets)
+            setOperator(operator)
+            setAmount(win)
+            setWinners(win)
+
+
+            console.log(win,"tickert")
+
+            
+          } else {
+                alert("No wallet detected");
+          }
+
+      }
+
+
+      getAllParams()
+
+  })
+
   const [quantity, setQuantity] = useState<number>(1);
 
   useEffect(() => {
     if (!tickets) return;
 
     const totalTickets: string[] = tickets;
+
+    console.log(tickets,"t>>>>>>>>>>>>")
 
     const noOfUserTickets = totalTickets.reduce(
       (total, ticketAddress) => (ticketAddress === address ? total + 1 : total),
@@ -77,19 +106,21 @@ const Home: NextPage = () => {
     const notification = toast.loading("Buying your Tickets...");
 
     try {
-      const data = await BuyTickets([
-        {
-          value: ethers.utils.parseEther(
-            (
-              Number(ethers.utils.formatEther(ticketPrice)) * quantity
-            ).toString()
-          ),
-        },
-      ]);
+      const signer:any =await getSigner()
+      const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
+      const data = await Contract.BuyTickets({
+        value: ethers.utils.parseEther((
+                  Number(ethers.utils.formatEther(ticketPrice)) * quantity
+                ).toString()
+          ) // Pass the value in wei here
+            });
+
+   
 
       toast.success("Tickets purchased successfully!", {
         id: notification,
       });
+      console.log(data,"ddd")
     } catch (error) {
       toast.error("Whoops! Something went wrong", {
         id: notification,
@@ -103,21 +134,27 @@ const Home: NextPage = () => {
     const notification = toast.loading("Withdrawing Winnings...");
 
     try {
-      const data = await WithdrawWinnings([{}]);
+      const signer:any =await getSigner()
+      const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
+      const data = await Contract.WithdrawWinnings();
 
       toast.success("Winning Withdrawn successfully!", {
         id: notification,
       });
     } catch (error) {
-      toast.error("Whoops! Something went wrong", {
+      toast.error("Whoops! retry,gas error", {
         id: notification,
       });
       console.error("contract call failure", error);
     }
   };
 
-  if (isLoading) return <Loading />;
+  // if (lotteryOperator?.length ===0) return <Loading />;
   if (!address) return <Login />;
+
+
+  
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -189,7 +226,7 @@ const Home: NextPage = () => {
             </div>
             {/* Timer */}
             <div className="mt-5 mb-3">
-              <CountdownTimer />
+              <CountdownTimer/>
             </div>
           </div>
           <div className="stats-container spacey-2">

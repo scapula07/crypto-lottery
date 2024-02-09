@@ -1,6 +1,10 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { useAddress, useContract, useContractData } from "@thirdweb-dev/react";
 import Countdown from "react-countdown";
+import {getSigner} from "../pages/util"
+import { ethers } from "ethers";
+import abi from "../pages/Lottery.json"
+
 
 type CountdownTimerProps = {
   hours?: number;
@@ -10,10 +14,27 @@ type CountdownTimerProps = {
 };
 
 const CountdownTimer: React.FC<CountdownTimerProps> = () => {
-  const { contract, isLoading } = useContract(
-    process.env.NEXT_PUBLIC_LOTTERY_CONTRACT_ADDRESS
-  );
-  const { data: expiration } = useContractData(contract, "expiration");
+  const [expiration,setExp]=useState<any>()
+
+  useEffect(()=>{
+    const getAllParams=async()=>{
+
+       if (window.ethereum) {
+         const signer:any =await getSigner()
+           const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
+           const expiration = await Contract.expiration();
+         setExp(expiration)
+           
+         } else {
+               alert("No wallet detected");
+         }
+
+     }
+
+
+     getAllParams()
+
+ })
 
   const renderer = ({
     hours,

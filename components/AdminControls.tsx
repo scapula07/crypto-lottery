@@ -10,37 +10,53 @@ import {
   useContractCall,
   useContractData,
 } from "@thirdweb-dev/react";
+import { useEffect,useState } from "react";
 import { ethers } from "ethers";
 import { currency } from "../constants";
 import toast from "react-hot-toast";
+import abi from "../pages/Lottery.json"
+import {getSigner} from "../pages/util"
+
 
 type AdminControlsProps = {};
 
 const AdminControls: React.FC<AdminControlsProps> = () => {
-  const { contract, isLoading } = useContract(
-    process.env.NEXT_PUBLIC_LOTTERY_CONTRACT_ADDRESS
-  );
-  const { data: operatorTotalCommission } = useContractData(
-    contract,
-    "operatorTotalCommission"
-  );
 
-  const { mutateAsync: DrawWinnerTicket } = useContractCall(
-    contract,
-    "DrawWinnerTicket"
-  );
-  const { mutateAsync: RefundAll } = useContractCall(contract, "RefundAll");
-  const { mutateAsync: restartDraw } = useContractCall(contract, "restartDraw");
-  const { mutateAsync: WithdrawCommission } = useContractCall(
-    contract,
-    "WithdrawCommission"
-  );
+    const [operatorTotalCommission,setCommission]=useState<any>()
+    const [expiration,setExp]=useState<any>()
+
+  useEffect(()=>{
+    const getAllParams=async()=>{
+
+       if (window.ethereum) {
+        const signer:any =await getSigner()
+           const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
+           const totalCommission = await Contract.operatorTotalCommission();
+           const expiration = await Contract.expiration();
+           console.log(totalCommission,"cooo")
+           setCommission(totalCommission)
+           setExp(expiration)
+           
+         } else {
+               alert("No wallet detected");
+         }
+
+     }
+
+
+     getAllParams()
+
+ })
+
+
 
   const drawWinner = async () => {
     const notification = toast.loading("Picking a Lucky Winner...");
 
     try {
-      const data = await DrawWinnerTicket([{}]);
+      const signer:any =await getSigner()
+      const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
+      const data= await Contract.DrawWinnerTicket();
 
       toast.success("A winner has been selected!", {
         id: notification,
@@ -57,9 +73,11 @@ const AdminControls: React.FC<AdminControlsProps> = () => {
     const notification = toast.loading("Refund All...");
 
     try {
-      const data = await DrawWinnerTicket([{}]);
+      const signer:any =await getSigner()
+      const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
+      const data= await Contract.RefundAll();
 
-      toast.success("A winner has been selected!", {
+      toast.success("Refunding all tickets holder!", {
         id: notification,
       });
     } catch (error) {
@@ -74,12 +92,16 @@ const AdminControls: React.FC<AdminControlsProps> = () => {
     const notification = toast.loading("Withdrawing Commission...");
 
     try {
-      const data = await WithdrawCommission([{}]);
+      const signer:any =await getSigner()
+
+      const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
+      const data= await Contract.WithdrawCommission();
+
 
       toast.success("Your commission has been withdrawn successfully", {
         id: notification,
       });
-      console.info(data);
+
     } catch (error) {
       toast.error("Whoops! Something went wrong", {
         id: notification,
@@ -92,8 +114,9 @@ const AdminControls: React.FC<AdminControlsProps> = () => {
     const notification = toast.loading("Restarting Draw...");
 
     try {
-      const data = await RefundAll([{}]);
-
+      const signer:any =await getSigner()
+      const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
+      const data= await Contract.restartDraw();
       toast.success("Restarting successfully", {
         id: notification,
       });
