@@ -21,7 +21,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = () => {
 
        if (window.ethereum) {
          const signer:any =await getSigner()
-         const Contract = new ethers.Contract("0xC185DD0639f5FaFc44de367239511244BCA33E67", abi, signer);
+         const Contract = new ethers.Contract("0xF3b6B5FBEbF567F9281CfD7Da2369b1ADcf3bf61", abi, signer);
            const expiration = await Contract.expiration();
          setExp(expiration)
            
