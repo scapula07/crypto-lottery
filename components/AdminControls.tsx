@@ -30,7 +30,7 @@ const AdminControls: React.FC<AdminControlsProps> = () => {
 
        if (window.ethereum) {
         const signer:any =await getSigner()
-           const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
+        const Contract = new ethers.Contract("0xC185DD0639f5FaFc44de367239511244BCA33E67", abi, signer);
            const totalCommission = await Contract.operatorTotalCommission();
            const expiration = await Contract.expiration();
            console.log(totalCommission,"cooo")
@@ -55,7 +55,7 @@ const AdminControls: React.FC<AdminControlsProps> = () => {
 
     try {
       const signer:any =await getSigner()
-      const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
+      const Contract = new ethers.Contract("0xC185DD0639f5FaFc44de367239511244BCA33E67", abi, signer);
       const data= await Contract.DrawWinnerTicket({gasLimit: "30000000"});
 
       toast.success("A winner has been selected!", {
@@ -74,7 +74,7 @@ const AdminControls: React.FC<AdminControlsProps> = () => {
 
     try {
       const signer:any =await getSigner()
-      const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
+      const Contract = new ethers.Contract("0xC185DD0639f5FaFc44de367239511244BCA33E67", abi, signer);
       const data= await Contract.RefundAll({gasLimit: "30000000"});
 
       toast.success("Refunding all tickets holder!", {
@@ -94,7 +94,7 @@ const AdminControls: React.FC<AdminControlsProps> = () => {
     try {
       const signer:any =await getSigner()
 
-      const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
+      const Contract = new ethers.Contract("0xC185DD0639f5FaFc44de367239511244BCA33E67", abi, signer);
       const data= await Contract.WithdrawCommission({gasLimit: "30000000"});
 
 
@@ -115,7 +115,7 @@ const AdminControls: React.FC<AdminControlsProps> = () => {
 
     try {
       const signer:any =await getSigner()
-      const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
+      const Contract = new ethers.Contract("0xC185DD0639f5FaFc44de367239511244BCA33E67", abi, signer);
       const data= await Contract.restartDraw({gasLimit: "30000000"});
       toast.success("Restarting successfully", {
         id: notification,

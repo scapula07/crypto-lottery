@@ -47,7 +47,7 @@ const Home: NextPage = () => {
             const sender:any =await getSender()
 
             console.log(signer,"sihg")
-            const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
+            const Contract = new ethers.Contract("0xC185DD0639f5FaFc44de367239511244BCA33E67", abi, signer);
             const remainingTickets = await Contract.RemainingTickets();
             const reward = await Contract.CurrentWinningReward();
             const commission = await Contract.ticketCommission();
@@ -110,7 +110,7 @@ const Home: NextPage = () => {
 
     try {
       const signer:any =await getSigner()
-      const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
+      const Contract = new ethers.Contract("0xC185DD0639f5FaFc44de367239511244BCA33E67", abi, signer);
   
       const data = await Contract.BuyTickets({
         value: ethers.utils.parseEther((
@@ -141,7 +141,7 @@ const Home: NextPage = () => {
 
     try {
       const signer:any =await getSigner()
-      const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
+      const Contract = new ethers.Contract("0xC185DD0639f5FaFc44de367239511244BCA33E67", abi, signer);
       const data = await Contract.WithdrawWinnings({gasLimit: "30000000"});
 
       toast.success("Winning Withdrawn successfully!", {
