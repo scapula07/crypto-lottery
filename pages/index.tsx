@@ -17,7 +17,7 @@ import { currency } from "../constants";
 import toast from "react-hot-toast";
 import Marquee from "react-fast-marquee";
 import AdminControls from "../components/AdminControls";
-import abi from "./Lottery.json"
+import abi from "./Lottery2.json"
 import {getSigner,getSender} from "../util"
 
 const Home: NextPage = () => {
@@ -47,7 +47,7 @@ const Home: NextPage = () => {
             const sender:any =await getSender()
 
             console.log(signer,"sihg")
-            const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
+            const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
             const remainingTickets = await Contract.RemainingTickets();
             const reward = await Contract.CurrentWinningReward();
             const commission = await Contract.ticketCommission();
@@ -63,7 +63,7 @@ const Home: NextPage = () => {
             setCommission(commission)
             setExp(expiration)
             setPrice(price)
-            setWinner(lastwinner)
+            setWinner(lastwinner) 
             setTickets(tickets)
             setOperator(operator)
             setAmount(win)
@@ -82,7 +82,10 @@ const Home: NextPage = () => {
 
       getAllParams()
 
-  })
+  },[])
+
+
+  console.log(ticketPrice,"price")
 
   const [quantity, setQuantity] = useState<number>(1);
 
@@ -107,12 +110,15 @@ const Home: NextPage = () => {
 
     try {
       const signer:any =await getSigner()
-      const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
+      const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
+  
       const data = await Contract.BuyTickets({
         value: ethers.utils.parseEther((
                   Number(ethers.utils.formatEther(ticketPrice)) * quantity
                 ).toString()
-          ) // Pass the value in wei here
+          ),
+          gasLimit: "30000000"
+           
             });
 
    
@@ -135,8 +141,8 @@ const Home: NextPage = () => {
 
     try {
       const signer:any =await getSigner()
-      const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
-      const data = await Contract.WithdrawWinnings();
+      const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
+      const data = await Contract.WithdrawWinnings({gasLimit: "30000000"});
 
       toast.success("Winning Withdrawn successfully!", {
         id: notification,

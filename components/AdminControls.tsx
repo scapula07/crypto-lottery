@@ -14,7 +14,7 @@ import { useEffect,useState } from "react";
 import { ethers } from "ethers";
 import { currency } from "../constants";
 import toast from "react-hot-toast";
-import abi from "../pages/Lottery.json"
+import abi from "../pages/Lottery2.json"
 import {getSigner} from "../util"
 
 
@@ -30,7 +30,7 @@ const AdminControls: React.FC<AdminControlsProps> = () => {
 
        if (window.ethereum) {
         const signer:any =await getSigner()
-           const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
+           const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
            const totalCommission = await Contract.operatorTotalCommission();
            const expiration = await Contract.expiration();
            console.log(totalCommission,"cooo")
@@ -55,8 +55,8 @@ const AdminControls: React.FC<AdminControlsProps> = () => {
 
     try {
       const signer:any =await getSigner()
-      const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
-      const data= await Contract.DrawWinnerTicket();
+      const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
+      const data= await Contract.DrawWinnerTicket({gasLimit: "30000000"});
 
       toast.success("A winner has been selected!", {
         id: notification,
@@ -74,8 +74,8 @@ const AdminControls: React.FC<AdminControlsProps> = () => {
 
     try {
       const signer:any =await getSigner()
-      const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
-      const data= await Contract.RefundAll();
+      const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
+      const data= await Contract.RefundAll({gasLimit: "30000000"});
 
       toast.success("Refunding all tickets holder!", {
         id: notification,
@@ -94,8 +94,8 @@ const AdminControls: React.FC<AdminControlsProps> = () => {
     try {
       const signer:any =await getSigner()
 
-      const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
-      const data= await Contract.WithdrawCommission();
+      const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
+      const data= await Contract.WithdrawCommission({gasLimit: "30000000"});
 
 
       toast.success("Your commission has been withdrawn successfully", {
@@ -115,8 +115,8 @@ const AdminControls: React.FC<AdminControlsProps> = () => {
 
     try {
       const signer:any =await getSigner()
-      const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
-      const data= await Contract.restartDraw();
+      const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
+      const data= await Contract.restartDraw({gasLimit: "30000000"});
       toast.success("Restarting successfully", {
         id: notification,
       });

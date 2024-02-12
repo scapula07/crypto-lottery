@@ -3,7 +3,7 @@ import { useAddress, useContract, useContractData } from "@thirdweb-dev/react";
 import Countdown from "react-countdown";
 import {getSigner} from "../util"
 import { ethers } from "ethers";
-import abi from "../pages/Lottery.json"
+import abi from "../pages/Lottery2.json"
 
 
 type CountdownTimerProps = {
@@ -21,7 +21,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = () => {
 
        if (window.ethereum) {
          const signer:any =await getSigner()
-           const Contract = new ethers.Contract("0x413d77F4f1213Fa38a604406D43eC662038828F4", abi?.abi, signer);
+         const Contract = new ethers.Contract("0x5F03b535B992b557ddBb567ef6204a0CaFFc3587", abi, signer);
            const expiration = await Contract.expiration();
          setExp(expiration)
            
@@ -34,7 +34,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = () => {
 
      getAllParams()
 
- })
+ },[])
 
   const renderer = ({
     hours,
