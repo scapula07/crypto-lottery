@@ -82,7 +82,7 @@ const Home: NextPage = () => {
 
       getAllParams()
 
-  },[])
+  })
 
 
   console.log(ticketPrice,"price")
